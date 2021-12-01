@@ -69,14 +69,9 @@ class Day01 {
      *
      * How many measurements are larger than the previous measurement?
      */
-    fun task1(input: List<String>): Int {
-        val depths = input.map { Integer.parseInt(it) }
-        val increases = depths.zipWithNext().count {
-            (last, current) -> current > last
-        }
-
-        return increases
-    }
+    fun task1(depths: List<Int>): Int =
+        depths.zipWithNext()
+              .count { (last, current) -> current > last }
 
     /**
      * Considering every single measurement isn't as useful as you expected:
@@ -116,15 +111,10 @@ class Day01 {
      *
      *  Consider sums of a three-measurement sliding window. How many sums are larger than the previous sum?
      */
-    fun task2(input: List<String>): Int {
-        val depths = input.map { Integer.parseInt(it) }
-        val increases = depths
-            .windowed(3) { it.sum() }
-            .zipWithNext()
-            .count {
-                (last, current) -> current > last
-            }
-
-        return increases
-    }
+    fun task2(depths: List<Int>): Int =
+        depths.windowed(3) { it.sum() }
+              .zipWithNext()
+              .count {
+                 (last, current) -> current > last
+              }
 }

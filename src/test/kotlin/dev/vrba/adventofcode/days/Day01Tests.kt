@@ -14,56 +14,36 @@ class Day01Tests {
     @Test
     @DisplayName("Part 1 example")
     fun testTask1Example() {
-        val input = """
-            199
-            200
-            208
-            210
-            200
-            207
-            240
-            269
-            260
-            263
-        """.trimIndent()
-           .lines()
+        val input = listOf(199, 200, 208, 210, 200, 207, 240, 269, 260, 263)
+        val result = instance.task1(input)
 
-        assertEquals(7, instance.task1(input))
+        assertEquals(7, result)
     }
 
     @Test
     @DisplayName("Part 1 input")
     fun testTask1Input() {
-        val input = readResourceLines("day01.txt")
+        val input = readResourceLines("day01.txt") { Integer.parseInt(it) }
+        val result = instance.task1(input)
 
-        assertEquals(1451, instance.task1(input))
+        assertEquals(1451, result)
     }
 
     @Test
     @DisplayName("Part 2 example")
     fun testTask2Example() {
-        val input = """
-            199
-            200
-            208
-            210
-            200
-            207
-            240
-            269
-            260
-            263
-        """.trimIndent()
-            .lines()
+        val input = listOf(199, 200, 208, 210, 200, 207, 240, 269, 260, 263)
+        val result = instance.task2(input)
 
-        assertEquals(5, instance.task2(input))
+        assertEquals(5, result)
     }
 
     @Test
     @DisplayName("Part 2 input")
     fun testTask2Input() {
-        val input = readResourceLines("day01.txt")
+        val input = readResourceLines("day01.txt") { Integer.parseInt(it) }
+        val result = instance.task2(input)
 
-        assertEquals(1395, instance.task2(input))
+        assertEquals(1395, result)
     }
 }
