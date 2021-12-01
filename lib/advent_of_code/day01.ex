@@ -132,10 +132,8 @@ defmodule AdventOfCode.Day01 do
     @spec compute_depth_increments(list(integer())) :: integer()
     def compute_depth_increments(report) when is_list(report) do
       report
-      |> Enum.chunk_every(3, 1, :discard)
-      |> Enum.map(&Enum.sum/1)
-      |> Enum.chunk_every(2, 1, :discard)
-      |> Enum.count(fn [previous, current] -> previous < current end)
+      |> Enum.chunk_every(4, 1, :discard)
+      |> Enum.count(fn [a, _, _, d] -> a < d end)
     end
   end
 end
