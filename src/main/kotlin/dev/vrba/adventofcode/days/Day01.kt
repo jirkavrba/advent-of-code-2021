@@ -118,11 +118,12 @@ class Day01 {
      */
     fun task2(input: List<String>): Int {
         val depths = input.map { Integer.parseInt(it) }
-        val increases = depths.windowed(3)
-            .map { it.sum() }
-            .zipWithNext().count {
+        val increases = depths
+            .windowed(3) { it.sum() }
+            .zipWithNext()
+            .count {
                 (last, current) -> current > last
-        }
+            }
 
         return increases
     }
