@@ -1,5 +1,7 @@
 defmodule AdventOfCode.Day01Test do
   use ExUnit.Case
+
+  alias AdventOfCode.Input
   alias AdventOfCode.Day01.{Task1, Task2}
 
   test "task 1 example" do
@@ -8,10 +10,7 @@ defmodule AdventOfCode.Day01Test do
   end
 
   test "task 1 input" do
-    report = File.read!("priv/inputs/day01.txt")
-    |> String.split("\n", trim: true)
-    |> Enum.map(&String.to_integer/1)
-
+    report = Input.read_ints_from_file("priv/inputs/day01.txt")
     assert Task1.compute_depth_increments(report) == 1451
   end
 
@@ -21,10 +20,7 @@ defmodule AdventOfCode.Day01Test do
   end
 
   test "task 2 input" do
-    report = File.read!("priv/inputs/day01.txt")
-    |> String.split("\n", trim: true)
-    |> Enum.map(&String.to_integer/1)
-
+    report = Input.read_ints_from_file("priv/inputs/day01.txt")
     assert Task2.compute_depth_increments(report) == 1395
   end
 end
