@@ -76,6 +76,12 @@ defmodule AdventOfCode.Day01 do
       |> Enum.chunk_every(2, 1, :discard)
       |> Enum.count(fn [previous, current] -> previous < current end)
     end
+
+    # lmao
+
+    # def compute_depth_increments([     ]),                do: 0
+    # def compute_depth_increments([h | t]) when h < hd(t), do: 1 + compute_depth_increments(t)
+    # def compute_depth_increments([_ | t]),                do: compute_depth_increments(t)
   end
 
   defmodule Task2 do
@@ -128,12 +134,13 @@ defmodule AdventOfCode.Day01 do
     Consider sums of a three-measurement sliding window. **How many sums are
     larger than the previous sum?**
     """
+    import List, only: [first: 1, last: 1]
 
     @spec compute_depth_increments(list(integer())) :: integer()
     def compute_depth_increments(report) when is_list(report) do
       report
       |> Enum.chunk_every(4, 1, :discard)
-      |> Enum.count(fn [a, _, _, d] -> a < d end)
+      |> Enum.count(fn list -> first(list) < last(list) end)
     end
   end
 end
