@@ -1,0 +1,78 @@
+defmodule AdventOfCode.Day02 do
+
+  defmodule Submarine do
+    @type t :: %__MODULE__{
+      x: integer(),
+      y: integer()
+    }
+
+    defstruct x: 0, y: 0
+
+    @spec move(t(), %{x: integer(), y: integer()}) :: t()
+    def move(%__MODULE__{x: x, y: y} = submarine, %{x: dx, y: dy}) do
+      %__MODULE__{submarine | x: x + dx, y: y + dy}
+    end
+  end
+
+  defmodule Task1 do
+    @moduledoc """
+
+    Now, you need to figure out how to pilot this thing.
+
+    It seems like the submarine can take a series of commands like `forward 1`, `down 2`, or `up 3`:
+
+    - `forward X` increases the horizontal position by `X` units.
+    - `down X` increases the depth by `X` units.
+    - `up X` decreases the depth by `X` units.
+
+    Note that since you're on a submarine, down and up affect your depth,
+    and so they have the opposite result of what you might expect.
+
+    The submarine seems to already have a planned course (your puzzle input).
+    You should probably figure out where it's going. For example:
+
+    ```
+    forward 5
+    down 5
+    forward 8
+    up 3
+    down 8
+    forward 2
+    ```
+    Your horizontal position and depth both start at `0`. The steps above would then modify them as follows:
+
+        `forward 5` adds `5` to your horizontal position, a total of `5`.
+        `down 5` adds `5` to your depth, resulting in a value of `5`.
+        `forward 8` adds `8` to your horizontal position, a total of `13`.
+        `up 3` decreases your depth by `3`, resulting in a value of `2`.
+        `down 8` adds `8` to your depth, resulting in a value of `10`.
+        `forward 2` adds `2` to your horizontal position, a total of `15`.
+
+    After following these instructions, you would have a horizontal position of `15` and a depth of `10`.
+    (Multiplying these together produces `150`.)
+
+    Calculate the horizontal position and depth you would have after following the planned course.
+    **What do you get if you multiply your final horizontal position by your final depth?**
+    """
+
+    @spec calculate_destination_product(list(String.t())) :: integer()
+    def calculate_destination_product(instructions) when is_list(instructions) do
+      submarine = %Submarine{}
+      reducer = fn instruction, submarine ->
+        with [instruction, number] <- String.split(instruction, " "),
+                          distance <- String.to_integer(number)
+        do
+          case instruction do
+            "forward" -> Submarine.move(submarine, %{x: distance, y: 0})
+            "up"      -> Submarine.move(submarine, %{x: 0, y: -distance})
+            "down"    -> Submarine.move(submarine, %{x: 0, y: distance})
+          end
+        end
+      end
+
+      destination = Enum.reduce(instructions, submarine, reducer)
+      destination.x * destination.y
+    end
+  end
+
+end
