@@ -26,5 +26,7 @@ advent_of_code-*.tar
 /tmp/
 
 
-.idea
-.elixir_ls
+/.idea/
+/.elixir_ls/
+/.gradle/
+/build/
