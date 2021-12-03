@@ -1,4 +1,31 @@
 defmodule AdventOfCode.Day03 do
+
+  defmodule Helpers do
+    @type bit :: 0 | 1
+    @spec find_most_common_bit(list(bit()), bit()) :: bit()
+    def find_most_common_bit(bits, when_tie \\ 1) when is_list(bits) do
+      bits
+      |> Enum.sum()
+      |> then(fn ones -> ones / length(bits) end)
+      |> then(fn
+          n when n < 0.5 -> 0
+          n when n > 0.5 -> 1
+          _ -> when_tie
+      end)
+    end
+
+    @spec convert_string_to_bits(String.t()) :: list(integer())
+    def convert_string_to_bits(string) do
+      string
+      |> String.graphemes()
+      |> Enum.map(&String.to_integer/1)
+    end
+
+    @spec flip_bit(bit()) :: bit()
+    def flip_bit(1), do: 0
+    def flip_bit(0), do: 1
+  end
+
   defmodule Task1 do
     @moduledoc """
     The submarine has been making some odd creaking noises,
@@ -57,25 +84,16 @@ defmodule AdventOfCode.Day03 do
     the submarine?** (Be sure to represent your answer in decimal, not binary.)
     """
 
-    defp find_most_common_bit(bits) when is_list(bits) do
-      bits
-      |> Enum.count(&(&1 == "1"))
-      |> then(fn ones -> ones / length(bits) >= 0.5 end)
-      |> then(fn true -> "1"; false -> "0" end)
-    end
-
-    @spec flip_bit_string(String.t()) :: String.t()
-    defp flip_bit_string("1"), do: "0"
-    defp flip_bit_string("0"), do: "1"
 
     @spec compute_gamma_epsilon_produce(list(String.t())) :: integer()
     def compute_gamma_epsilon_produce(report) when is_list(report) do
       most_common_bits =
         report
-        |> Enum.map(&String.graphemes/1)
+        |> Enum.map(&Helpers.convert_string_to_bits/1)
         |> Enum.zip()
         |> Enum.map(&Tuple.to_list/1)
-        |> Enum.map(&find_most_common_bit/1)
+        |> Enum.map(&Helpers.find_most_common_bit/1)
+        |> IO.inspect()
 
       {gamma_rate, _} =
         most_common_bits
@@ -84,7 +102,7 @@ defmodule AdventOfCode.Day03 do
 
       {epsilon_rate, _} =
         most_common_bits
-        |> Enum.map(&flip_bit_string/1)
+        |> Enum.map(&Helpers.flip_bit/1)
         |> Enum.join("")
         |> Integer.parse(2)
 
@@ -152,9 +170,52 @@ defmodule AdventOfCode.Day03 do
     What is the life support rating of the submarine? (Be sure to represent your answer in decimal, not binary.)
     """
 
-    @spec compute_oxygen_co2_ratings_product(list(String.t())) :: String.t()
-    def compute_oxygen_co2_ratings_product(report) do
+    @spec filter_records(list(integer()), integer(), :oxygen | :co2) :: integer()
+    defp filter_records([record], _, _), do: record
+    defp filter_records(records, current, :oxygen) do
+      most_common_bit = records
+        |> Enum.map(fn record -> Enum.at(record, current) end)
+        |> Helpers.find_most_common_bit()
 
+      predicate = fn record -> Enum.at(record, current) == most_common_bit end
+      filtered = records
+        |> Enum.filter(predicate)
+
+      filter_records(filtered, current + 1, :oxygen)
+    end
+
+    defp filter_records(records, current, :co2) do
+      most_common_bit = records
+        |> Enum.map(fn record -> Enum.map(record, &Helpers.flip_bit/1) end)
+        |> Enum.map(fn record -> Enum.at(record, current) end)
+        |> Helpers.find_most_common_bit(0)
+
+      predicate = fn record -> Enum.at(record, current) == most_common_bit end
+      filtered = records
+        |> Enum.filter(predicate)
+
+      filter_records(filtered, current + 1, :co2)
+    end
+
+    @spec compute_oxygen_co2_ratings_product(list(String.t())) :: integer()
+    def compute_oxygen_co2_ratings_product(report) do
+      # Convert report to list of 1s and 0s
+      report = report
+        |> Enum.map(&Helpers.convert_string_to_bits/1)
+
+      {oxygen_generator_rating, _} =
+        report
+        |> filter_records(0, :oxygen)
+        |> Enum.join("")
+        |> Integer.parse(2)
+
+      {co2_rating, _} =
+        report
+        |> filter_records(0, :co2)
+        |> Enum.join("")
+        |> Integer.parse(2)
+
+      oxygen_generator_rating * co2_rating
     end
   end
 end
