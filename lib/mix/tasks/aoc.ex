@@ -24,11 +24,11 @@ defmodule Mix.Tasks.Aoc do
 
     assigns = [
       file_name: file_name,
-      module_fullname: Module.concat(AdventOfCode, module_name),
-      test_module_fullname:  Module.concat(AdventOfCode, module_name <> "Test"),
+      module: module_name,
+      test_module:  module_name <> "Test",
     ]
 
     Mix.Generator.copy_template("priv/mix/day.eex", "lib/advent_of_code/#{file_name}.ex", assigns)
-    Mix.Generator.copy_template("priv/mix/day_test.eex", "test/advent_of_code/#{file_name}_test.ex", assigns)
+    Mix.Generator.copy_template("priv/mix/day_test.eex", "test/advent_of_code/#{file_name}_test.exs", assigns)
   end
 end

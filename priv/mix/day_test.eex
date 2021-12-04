@@ -1,6 +1,6 @@
-defmodule <%= @test_module_fullname %> do
+defmodule AdventOfCode.<%= @test_module %> do
   use ExUnit.Case
-  alias AdventOfCode.<%= @module_fullname %>.{Task1, Task2}
+  alias AdventOfCode.<%= @module %>.{Task1, Task2}
 
   test "task 1 example" do
     input = [

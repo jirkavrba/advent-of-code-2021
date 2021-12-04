@@ -1,4 +1,4 @@
-defmodule <%= @module_fullname %> do
+defmodule <%= @module %> do
   defmodule Task1 do
   @moduledoc """
   Task 1 description
