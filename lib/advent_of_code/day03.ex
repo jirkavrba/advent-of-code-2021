@@ -93,7 +93,6 @@ defmodule AdventOfCode.Day03 do
         |> Enum.zip()
         |> Enum.map(&Tuple.to_list/1)
         |> Enum.map(&Helpers.find_most_common_bit/1)
-        |> IO.inspect()
 
       {gamma_rate, _} =
         most_common_bits
