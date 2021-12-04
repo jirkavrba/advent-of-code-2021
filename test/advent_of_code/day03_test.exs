@@ -19,12 +19,12 @@ defmodule AdventOfCode.Day03Test do
       "01010"
     ]
 
-    assert Task1.compute_gamma_epsilon_produce(input) == 198
+    assert Task1.compute_gamma_epsilon_product(input) == 198
   end
 
   test "task 1 input" do
     input = Input.read_lines_from_file("priv/inputs/day03.txt")
-    assert Task1.compute_gamma_epsilon_produce(input) == 3148794
+    assert Task1.compute_gamma_epsilon_product(input) == 3148794
   end
 
   test "task 2 example" do

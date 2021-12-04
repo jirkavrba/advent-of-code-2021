@@ -85,8 +85,8 @@ defmodule AdventOfCode.Day03 do
     """
 
 
-    @spec compute_gamma_epsilon_produce(list(String.t())) :: integer()
-    def compute_gamma_epsilon_produce(report) when is_list(report) do
+    @spec compute_gamma_epsilon_product(list(String.t())) :: integer()
+    def compute_gamma_epsilon_product(report) when is_list(report) do
       most_common_bits =
         report
         |> Enum.map(&Helpers.convert_string_to_bits/1)
