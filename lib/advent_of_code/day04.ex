@@ -4,9 +4,9 @@ defmodule AdventOfCode.Day04 do
     Bingo board struct, all columns and diagonals are counted as rows for simplicity
     """
     @type t :: %__MODULE__{
-      rows: list(list(integer())),
-      numbers: list(integer())
-    }
+            rows: list(list(integer())),
+            numbers: list(integer())
+          }
     @enforce_keys [:rows, :numbers]
     defstruct [:rows, :numbers]
 
@@ -29,22 +29,24 @@ defmodule AdventOfCode.Day04 do
     end
 
     @spec mark(t(), number) :: t()
-    def mark(%__MODULE__{rows: rows, numbers: numbers} = board, number) do
+    def mark(%BingoBoard{rows: rows, numbers: numbers} = board, number) do
       rows = Enum.map(rows, fn row -> row -- [number] end)
       numbers = numbers -- [number]
 
       %BingoBoard{board | rows: rows, numbers: numbers}
     end
 
-    @spec won(t()) :: boolean()
-    def won(%BingoBoard{rows: rows}) do Enum.any?(rows, &Enum.empty?/1)
+    @spec won?(t()) :: boolean()
+    def won?(%BingoBoard{rows: rows}) do
+      Enum.any?(rows, &Enum.empty?/1)
     end
 
     @spec score(t()) :: integer()
     def score(%BingoBoard{numbers: numbers}), do: Enum.sum(numbers)
   end
 
-  defmodule Task1 do
+  defmodule Input do
+    @spec parse_boards(list(String.t())) :: list(BingoBoard.t())
     defp parse_boards(source) do
       source
       |> Enum.map(&String.trim/1)
@@ -55,9 +57,28 @@ defmodule AdventOfCode.Day04 do
       |> Enum.map(&BingoBoard.create/1)
     end
 
+    @spec parse(list(String.t())) :: {list(integer()), list(BingoBoard.t())}
+    def parse(lines) when is_list(lines) do
+      [draws | boards] = lines
+
+      draws =
+        draws
+        |> String.trim()
+        |> String.split(",")
+        |> Enum.map(&String.to_integer/1)
+
+      boards = parse_boards(boards)
+
+      {draws, boards}
+    end
+  end
+
+  defmodule Task1 do
+    @type accumulator :: {list(BingoBoard.t()), BingoBoard.t() | nil, integer() | nil}
+    @spec draw_next_number(integer(), accumulator()) :: accumulator()
     defp draw_next_number(number, {boards, nil, _}) do
       boards = Enum.map(boards, fn board -> BingoBoard.mark(board, number) end)
-      winner = Enum.find(boards, &BingoBoard.won/1)
+      winner = Enum.find(boards, &BingoBoard.won?/1)
 
       case winner do
         nil -> {boards, nil, nil}
@@ -68,21 +89,43 @@ defmodule AdventOfCode.Day04 do
     defp draw_next_number(_number, acc), do: acc
 
     def find_score_of_winner_board(lines) when is_list(lines) do
-      [draws | boards] = lines
-      draws = draws
-        |> String.trim()
-        |> String.split(",")
-        |> Enum.map(&String.to_integer/1)
-
-      boards = parse_boards(boards)
-      initial = {boards, nil, nil}
+      {draws, boards} = Input.parse(lines)
 
       draws
-      |> Enum.reduce(initial, &draw_next_number/2)
+      |> Enum.reduce({boards, nil, nil}, &draw_next_number/2)
       |> then(fn {_, board, draw} -> BingoBoard.score(board) * draw end)
     end
   end
 
   defmodule Task2 do
+    @type accumulator :: {list(BingoBoard.t()), list(BingoBoard.t()), integer()}
+    @spec draw_next_number(integer(), accumulator()) :: accumulator()
+    defp draw_next_number(_, {[], _, _} = acc), do: acc
+
+    defp draw_next_number(number, {[last], _, _} = acc) do
+      last = BingoBoard.mark(last, number)
+
+      cond do
+        BingoBoard.won?(last) -> {[], last, number}
+        true -> acc
+      end
+    end
+
+    defp draw_next_number(number, {boards, _, _}) do
+      remaining =
+        boards
+        |> Enum.map(fn board -> BingoBoard.mark(board, number) end)
+        |> Enum.reject(&BingoBoard.won?/1)
+
+      {remaining, nil, nil}
+    end
+
+    def find_score_of_last_board(lines) when is_list(lines) do
+      {draws, boards} = Input.parse(lines)
+
+      draws
+      |> Enum.reduce({boards, nil, nil}, &draw_next_number/2)
+      |> then(fn {_, board, draw} -> BingoBoard.score(board) * draw end)
+    end
   end
 end
