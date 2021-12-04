@@ -1,15 +1,7 @@
-defmodule <%= @module %> do
+defmodule AdventOfCode.<%= @module %> do
   defmodule Task1 do
-  @moduledoc """
-  Task 1 description
-  """
-
   end
 
   defmodule Task2 do
-  @moduledoc """
-  Task 2 description 
-  """ 
-
   end
 end
