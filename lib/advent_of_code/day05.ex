@@ -15,7 +15,7 @@ defmodule AdventOfCode.Day05 do
       x1 == x2 or y1 == y2
     end
 
-    @spec points(t()) :: {integer(), integer()}
+    @spec points(t()) :: list({integer(), integer()})
     def points(%Line{x1: x1, x2: x2, y1: y1, y2: y2} = line) do
       cond do
         is_straight(line) -> for x <- x1..x2, y <- y1..y2, do: {x, y}
@@ -43,7 +43,6 @@ defmodule AdventOfCode.Day05 do
     |> Enum.filter(filter)
     |> Enum.flat_map(&Line.points/1)
     |> Enum.frequencies()
-    |> Map.values()
-    |> Enum.count(fn count -> count > 1 end)
+    |> Enum.count(fn {_, count} -> count > 1 end)
   end
 end
