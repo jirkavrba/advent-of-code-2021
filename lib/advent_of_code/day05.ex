@@ -26,7 +26,6 @@ defmodule AdventOfCode.Day05 do
 
   @spec venture_to_line(String.t()) :: Line.t()
   defp venture_to_line(line) do
-    # The format is x1,y1 -> x2,y2
     # The first element is the whole regex match
     ~r"(\d+),(\d+)\s+->\s+(\d+),(\d+)"
     |> Regex.run(line)
