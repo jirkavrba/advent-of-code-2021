@@ -30,8 +30,8 @@ defmodule AdventOfCode.Day05 do
     def is_straight_line(_), do: false
   end
 
-  @spec venture_to_points(String.t(), fun()) :: list(Location.t())
-  defp venture_to_points(line, filter \\ fn _ -> true end) do
+  @spec venture_to_locations(String.t()) :: list(list(Location.t()))
+  defp venture_to_locations(line) do
     # The format is x1,y1 -> x2,y2
     ~r"(\d+),(\d+)\s+->\s+(\d+),(\d+)"
     |> Regex.run(line)
@@ -39,25 +39,17 @@ defmodule AdventOfCode.Day05 do
     |> Enum.map(&String.to_integer/1)
     |> Enum.chunk_every(2)
     |> Enum.map(&Location.new/1)
-    |> Enum.chunk_every(2)
+  end
+
+  @spec compute_venture_overlaps(list(String.t()), boolean()) :: integer()
+  def compute_venture_overlaps(input, include_diagonals \\ false) when is_list(input) do
+    filter = fn line -> include_diagonals or Location.is_straight_line(line) end
+
+    input
+    |> Enum.map(&venture_to_locations/1)
     |> Enum.filter(filter)
     |> Enum.flat_map(&Location.points_between/1)
-  end
-
-  @spec compute_venture_overlaps_excluding_diagonals(list(String.t())) :: integer()
-  def compute_venture_overlaps_excluding_diagonals(input) when is_list(input) do
-    input
-    |> Enum.flat_map(fn line -> venture_to_points(line, &Location.is_straight_line/1) end)
     |> Enum.frequencies()
     |> Enum.count(fn {_, count} -> count > 1 end)
   end
-
-  @spec compute_venture_overlaps(list(String.t())) :: integer()
-  def compute_venture_overlaps(input) when is_list(input) do
-    input
-    |> Enum.flat_map(&venture_to_points/1)
-    |> Enum.frequencies()
-    |> Enum.count(fn {_, count} -> count > 1 end)
-  end
-
 end

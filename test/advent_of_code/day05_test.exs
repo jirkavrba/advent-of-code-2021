@@ -18,12 +18,12 @@ defmodule AdventOfCode.Day05Test do
     """
     |> String.split("\n", trim: true)
 
-    assert Day05.compute_venture_overlaps_excluding_diagonals(input) == 5
+    assert Day05.compute_venture_overlaps(input) == 5
   end
 
   test "task 1 input" do
     input = Input.read_lines_from_file("priv/inputs/day05.txt")
-    assert Day05.compute_venture_overlaps_excluding_diagonals(input) == 6005
+    assert Day05.compute_venture_overlaps(input) == 6005
   end
 
   test "task 2 example" do
@@ -41,11 +41,11 @@ defmodule AdventOfCode.Day05Test do
     """
     |> String.split("\n", trim: true)
 
-    assert Day05.compute_venture_overlaps(input) == 12
+    assert Day05.compute_venture_overlaps(input, true) == 12
   end
 
   test "task 2 input" do
     input = Input.read_lines_from_file("priv/inputs/day05.txt")
-    assert Day05.compute_venture_overlaps(input) == 23864
+    assert Day05.compute_venture_overlaps(input, true) == 23864
   end
 end
