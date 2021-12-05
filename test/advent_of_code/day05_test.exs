@@ -1,29 +1,40 @@
 defmodule AdventOfCode.Day05Test do
   use ExUnit.Case
   alias AdventOfCode.Input
-  alias AdventOfCode.Day05.{Task1, Task2}
+  alias AdventOfCode.Day05
 
   test "task 1 example" do
-    input = [
-    ]
+    input = """
+      0,9 -> 5,9
+      8,0 -> 0,8
+      9,4 -> 3,4
+      2,2 -> 2,1
+      7,0 -> 7,4
+      6,4 -> 2,0
+      0,9 -> 2,9
+      3,4 -> 1,4
+      0,0 -> 8,8
+      5,5 -> 8,2
+    """
+    |> String.split("\n", trim: true)
 
-    assert Task1.___(input) == 0
+    assert Day05.compute_venture_overlaps(input) == 0
   end
 
   test "task 1 input" do
-    input = Input.read_lines_from_file("priv/inputs/day05.txt")
-    assert Task1.___(input) == 0
+    # input = Input.read_lines_from_file("priv/inputs/day05.txt")
+    # assert Task1.___(input) == 0
   end
 
   test "task 2 example" do
-    input = [
-    ]
+    # input = [
+    # ]
 
-    assert Task2.___(input) == 0
+    # assert Task2.___(input) == 0
   end
 
   test "task 2 input" do
-    input = Input.read_lines_from_file("priv/inputs/day05.txt")
-    assert Task2.___(input) == 0
+    # input = Input.read_lines_from_file("priv/inputs/day05.txt")
+    # assert Task2.___(input) == 0
   end
 end

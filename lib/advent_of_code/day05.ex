@@ -1,7 +1,6 @@
 defmodule AdventOfCode.Day05 do
-  defmodule Task1 do
+
+  def compute_venture_overlaps(input) when is_list(input) do
   end
 
-  defmodule Task2 do
-  end
 end
