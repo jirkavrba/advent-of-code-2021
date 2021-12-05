@@ -1,7 +1,11 @@
 defmodule AdventOfCode.<%= @module %> do
-  defmodule Task1 do
+
+  def __task1__(input) do
+    :ok
   end
 
-  defmodule Task2 do
+  def __task2__(input) do
+    :ok
   end
+
 end
