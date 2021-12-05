@@ -1,6 +1,7 @@
 defmodule AdventOfCode.Day05 do
   defmodule Line do
-    @type t() :: %__MODULE__{
+    @type point :: {integer(), integer()}
+    @type t :: %__MODULE__{
             x1: integer(), x2: integer(),
             y1: integer(), y2: integer()
           }
@@ -15,7 +16,7 @@ defmodule AdventOfCode.Day05 do
       x1 == x2 or y1 == y2
     end
 
-    @spec points(t()) :: list({integer(), integer()})
+    @spec points(t()) :: list(point())
     def points(%Line{x1: x1, x2: x2, y1: y1, y2: y2} = line) do
       cond do
         is_straight(line) -> for x <- x1..x2, y <- y1..y2, do: {x, y}
