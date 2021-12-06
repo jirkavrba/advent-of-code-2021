@@ -30,6 +30,6 @@ defmodule Mix.Tasks.Aoc do
 
     Mix.Generator.copy_template("priv/mix/day.eex", "lib/advent_of_code/#{file_name}.ex", assigns)
     Mix.Generator.copy_template("priv/mix/day_test.eex", "test/advent_of_code/#{file_name}_test.exs", assigns)
-    Mix.Generator.create_file("/priv/readme/#{file_name}.md", "")
+    Mix.Generator.create_file("priv/readme/#{file_name}.md", "")
   end
 end
