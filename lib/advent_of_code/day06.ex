@@ -24,8 +24,4 @@ defmodule AdventOfCode.Day06 do
     |> Enum.map(fn {_, v} -> v end)
     |> Enum.sum()
   end
-
-  def __task2__(input) do
-    :ok
-  end
 end
