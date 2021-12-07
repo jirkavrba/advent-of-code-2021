@@ -13,7 +13,7 @@ defmodule AdventOfCode.<%= @test_module %> do
 
   test "task 1 input" do
     input = Input.read_lines_from_file("priv/inputs/<%= @file_name %>.txt")
-    assert Task1.__task1__(input) == 0
+    assert <%= @module %>.__task1__(input) == 0
   end
 
   test "task 2 example" do

@@ -14,20 +14,14 @@ defmodule AdventOfCode.Day06 do
 
     import Map, only: [put: 3, get: 3, delete: 2]
 
-    shift_lifetimes = fn
-      {0, v} -> [{:new, v}, {@initial, v}]
-      {k, v} -> [{k - 1, v}]
-    end
-
     1..days
     |> Enum.reduce(initial, fn _, fish ->
       fish
-      |> Enum.flat_map(shift_lifetimes)
+      |> put(@reset + 1, get(fish, 0, 0) + get(fish, @reset + 1, 0))
+      |> put(@initial + 1, get(fish, 0, 0))
+      |> delete(0)
+      |> Enum.map(fn {k, v} -> {k - 1, v} end)
       |> Map.new()
-      |> then(fn map -> map
-        |> put(@reset, get(map, :new, 0) + get(map, @reset, 0))
-        |> delete(:new)
-      end)
     end)
     |> Map.values()
     |> Enum.sum()
