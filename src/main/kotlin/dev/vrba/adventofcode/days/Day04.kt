@@ -34,14 +34,11 @@ class Day04 {
     fun findWinnerBingoBoardScore(input: List<String>): Int {
         val (draws, boards) = parseInput(input)
 
-        draws.fold(boards) { boards, draw ->
-            val updated = boards.map { it.mark(draw) }
-            val winner = updated.firstOrNull { it.won() }
-
-            winner?.let { return it.score() * draw } ?: updated
-        }
-
-        return 0
+        return draws.asSequence()
+            .runningFold(boards to 0) { (boards, _), draw -> boards.map { it.mark(draw) } to draw  }
+            .dropWhile { (boards, _) -> boards.none { it.won() }}
+            .first()
+            .let { (boards, draw) -> boards.first { it.won()}.score() * draw }
     }
 
     fun findLoserBingoBoardScore(input: List<String>): Int {
