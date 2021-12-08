@@ -48,7 +48,7 @@ class Day08Tests {
         val input = listOf("acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf")
         val result = instance.task2(input)
 
-        assertEquals(61229, result)
+        assertEquals(5353, result)
     }
 
     @Test
@@ -76,9 +76,9 @@ class Day08Tests {
     @Test
     @DisplayName("Part 2 input")
     fun testTask2Input() {
-//        val input = readResourceLines("day08.txt")
-//        val result = instance.findLoserBingoBoardScore(input)
+        val input = readResourceLines("day08.txt")
+        val result = instance.task2(input)
 
-//        assertEquals(17388, result)
+        assertEquals(0, result)
     }
 }

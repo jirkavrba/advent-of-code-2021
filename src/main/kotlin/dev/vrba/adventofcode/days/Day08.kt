@@ -41,43 +41,38 @@ class Day08 {
 
     private fun solve(entry: Entry): Int {
         // Yo this is some seriously ugly-ass shit code
-
-        val all = ('a'..'g')
         val sets = entry.input.map { it.toSet() }
-        val solution = all.associateWith { null }.toMutableMap<Char, Char?>()
 
-        val one = sets.first { it.size == segments[1]?.size }
-        val four = sets.first { it.size == segments[4]?.size }
-        val seven = sets.first { it.size == segments[7]?.size }
+        // Those number sets can be determined by length
+        val one = sets.first { it.size == 2 }
+        val four = sets.first { it.size == 4 }
+        val seven = sets.first { it.size == 3 }
+        val eight = sets.first { it.size == 7 }
 
-        // a = 7 - 1
-        solution['a'] = (seven - one.intersect(seven)).first()
+        val solution = eight.associateWith { null }.toMutableMap<Char, Char?>()
 
-        val nine = sets.first { it.size == segments[9]?.size && it.intersect(four).size == 4 }
-        val six = sets.first { it.size == segments[6]?.size && it.intersect(one).size == 1 }
-        val zero = sets.first { it.size == segments[0]?.size && it != six && it != nine }
+        solution['a'] = (seven - one).first()
 
-        // c = 8 - 6
-        // f = 1 - c
-        // d = 8 - 0
-        // e = 8 - 9
-        solution['c'] = (all - six).first()
+        val nine = sets.first { it.size == 6 && it.intersect(four).size == segments[4]?.size }
+        val six = sets.first { it.size == 6 && it.intersect(seven).size == 2 }
+        val zero = sets.first { it.size == 6 && it != nine && it != six }
+
+        solution['e'] = (eight - nine).first()
+        solution['d'] = (eight - zero).first()
+        solution['c'] = (eight - six).first()
         solution['f'] = (one - solution['c']).first()
-        solution['d'] = (all - zero).first()
-        solution['e'] = (all - nine).first()
+        solution['b'] = (four - solution['c'] - solution['d'] - solution['f']).first()
+        solution['g'] = (eight - solution.values.toSet()).first()
 
-        val three = sets.first { it.size == segments[3]?.size && one.intersect(it).size == 2 }
+        val lookup = segments.map { (k, v) -> v.sorted().joinToString("") to k }.toMap()
+        val translation = solution.map { (k, v) -> v to k }.toMap()
+        val translated = entry.output
+            .map { output -> output.map { translation[it] }.sortedBy { it }.joinToString("") }
+            .mapNotNull { lookup[it] }
+            .joinToString("")
+            .toInt()
 
-        // b = 4 - (c, d, f)
-        // g = 8 - the rest
-        solution['b'] = (four - three).first()
-        solution['g'] = (all - setOf(solution['a'], solution['b'], solution['c'], solution['d'], solution['e'], solution['f'])).first()
-
-        println(solution)
-        println(segments)
-        println(entry.output.map { output -> output.map { solution[it] }.toSet() })
-
-        return 0
+        return translated
     }
 
     fun task2(input: List<String>): Int {
