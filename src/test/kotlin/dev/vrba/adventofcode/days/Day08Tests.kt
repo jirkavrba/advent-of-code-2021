@@ -79,6 +79,6 @@ class Day08Tests {
         val input = readResourceLines("day08.txt")
         val result = instance.task2(input)
 
-        assertEquals(0, result)
+        assertEquals(933305, result)
     }
 }
