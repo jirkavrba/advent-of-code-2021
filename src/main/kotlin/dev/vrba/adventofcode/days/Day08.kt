@@ -40,23 +40,19 @@ class Day08 {
     }
 
     private fun solve(entry: Entry): Int {
-        // Yo this is some seriously ugly-ass shit code
+        // Yo, this is some seriously ugly-ass shit code
         val sets = entry.input.map { it.toSet() }
+        val solution = ('a'..'g').associateWith { null }.toMutableMap<Char, Char?>()
 
-        // Those number sets can be determined by length
         val one = sets.first { it.size == 2 }
         val four = sets.first { it.size == 4 }
         val seven = sets.first { it.size == 3 }
         val eight = sets.first { it.size == 7 }
-
-        val solution = eight.associateWith { null }.toMutableMap<Char, Char?>()
-
-        solution['a'] = (seven - one).first()
-
         val nine = sets.first { it.size == 6 && it.intersect(four).size == segments[4]?.size }
         val six = sets.first { it.size == 6 && it.intersect(seven).size == 2 }
         val zero = sets.first { it.size == 6 && it != nine && it != six }
 
+        solution['a'] = (seven - one).first()
         solution['e'] = (eight - nine).first()
         solution['d'] = (eight - zero).first()
         solution['c'] = (eight - six).first()
@@ -66,13 +62,16 @@ class Day08 {
 
         val lookup = segments.map { (k, v) -> v.sorted().joinToString("") to k }.toMap()
         val translation = solution.map { (k, v) -> v to k }.toMap()
-        val translated = entry.output
-            .map { output -> output.map { translation[it] }.sortedBy { it }.joinToString("") }
+
+        return entry.output
+            .map { output -> output
+                .map { translation[it] }
+                .sortedBy { it }
+                .joinToString("")
+            }
             .mapNotNull { lookup[it] }
             .joinToString("")
             .toInt()
-
-        return translated
     }
 
     fun task2(input: List<String>): Int {
