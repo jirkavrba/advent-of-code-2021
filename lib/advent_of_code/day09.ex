@@ -1,4 +1,5 @@
 defmodule AdventOfCode.Day09 do
+  alias AdventOfCode.Support.Matrix
 
   @spec find_sum_of_low_points(list(String.t())) :: integer()
   def find_sum_of_low_points(input) when is_list(input) do
@@ -9,19 +10,30 @@ defmodule AdventOfCode.Day09 do
     |> Enum.flat_map(&String.graphemes/1)
     |> Enum.map(&String.to_integer/1)
     |> Enum.chunk_every(width)
+    |> Matrix.from_list()
     |> find_low_points(width, height)
   end
 
-  defp neighbours(matrix, x, y, width, height) do
-    c = [matrix |> Enum.at(y) |> Enum.at(x)]
-
-    dx = for i <- max(x - 1, 0) .. min(x + 1, width - 1), do: matrix |> Enum.at(y) |> Enum.at(i)
-    dy = for i <- max(y - 1, 0) .. min(y + 1, height - 1), do: matrix |> Enum.at(i) |> Enum.at(i)
-
-    dx ++ dy -- c -- c
+  defp neighbours({x, y}, width, height) do
+    [
+      (if x > 0,          do: {x - 1, y}),
+      (if x < width - 1,  do: {x + 1, y}),
+      (if y > 0,          do: {x, y - 1}),
+      (if y < height - 1, do: {x, y + 1}),
+    ]
+    |> Enum.reject(&(&1 == nil))
   end
 
   defp find_low_points(matrix, width, height) do
-    neighbours(matrix, 0, 0, width, height)
+    positions = for x <- 0..(width - 1), y <- 0..(height - 1), do: {
+      matrix[y][x],
+      neighbours({x, y}, width, height)
+      |> Enum.map(fn {x, y} -> matrix[y][x] end)
+    }
+
+    positions
+    |> Enum.filter(fn {position, neighbours} -> Enum.all?(neighbours, fn neighbour -> neighbour > position end) end)
+    |> Enum.map(fn {position, _} -> position + 1 end)
+    |> Enum.sum()
   end
 end
