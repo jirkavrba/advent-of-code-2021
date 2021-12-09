@@ -31,22 +31,29 @@ defmodule AdventOfCode.Day08 do
   defp translate_segments(input) when is_list(input) do
     segments = [
       #a  b  c  d  e  f  g
-      [1, 1, 1, 0, 1, 1, 1], # 0
-      [0, 0, 1, 0, 0, 1, 0], # 1
-      [1, 0, 1, 1, 1, 0, 1], # 2
-      [1, 0, 1, 1, 0, 1, 1], # 3
-      [0, 1, 1, 1, 0, 1, 0], # 4
-      [1, 1, 0, 1, 0, 1, 1], # 5
-      [1, 1, 0, 1, 1, 1, 1], # 6
-      [1, 0, 1, 0, 0, 1, 0], # 7
-      [1, 1, 1, 1, 1, 1, 1], # 8
-      [1, 1, 1, 1, 0, 1, 1], # 9
+      [:a, :b, :c,     :e, :f, :g], # 0
+      [        :c,         :f    ], # 1
+      [:a,     :c, :d, :e,     :g], # 2
+      [:a,     :c, :d,     :f, :g], # 3
+      [    :b, :c, :d,     :f    ], # 4
+      [:a, :b,     :d,     :f, :g], # 5
+      [:a, :b,     :d, :e, :f, :g], # 6
+      [:a,     :c,         :f    ], # 7
+      [:a, :b, :c, :d, :e, :f, :g], # 8
+      [:a, :b, :c, :d,     :f, :g] # 9
     ]
 
-    string_to_bits = fn string -> ?a..?b |> Enum.map(&(String.contains?(string, &1))) end
+    string_to_bits = fn string ->
+      string
+      |> String.graphemes()
+      |> Enum.sort()
+      |> Enum.map(&String.to_atom/1)
+      |> Enum.filter(&(&1 in [:a, :b, :c, :d, :e, :f, :g]))
+    end
 
-    input
+    sets = input
     |> Enum.map(string_to_bits)
-    |> IO.inspect()
+    |> Enum.uniq()
+
   end
 end
