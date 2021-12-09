@@ -36,6 +36,6 @@ defmodule AdventOfCode.Day09Test do
 
   test "task 2 input" do
     input = Input.read_lines_from_file("priv/inputs/day09.txt")
-    assert Day09.find_product_of_largest_basins(input) == 0
+    assert Day09.find_product_of_largest_basins(input) == 1019494
   end
 end
