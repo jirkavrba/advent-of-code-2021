@@ -8,6 +8,18 @@ defmodule AdventOfCode.Day10 do
     |> Enum.sum()
   end
 
+  @spec compute_completion_score(list(String.t())) :: integer()
+  def compute_completion_score(input) when is_list(input) do
+    scores = input
+    |> Enum.map(&String.to_charlist/1)
+    |> Enum.map(&find_errors/1)
+    |> Enum.map(&score_completion/1)
+    |> Enum.reject(&(&1 == 0))
+    |> Enum.sort()
+
+    Enum.at(scores, trunc(length(scores) / 2))
+  end
+
   defguard is_opening(char) when char in [?(, ?[, ?{, ?<]
   defguard is_closing(char) when char in [?), ?], ?}, ?>]
 
@@ -19,7 +31,7 @@ defmodule AdventOfCode.Day10 do
                   {?<, ?>}
                 ]
 
-  @spec find_errors(charlist()) :: charlist()
+  @spec find_errors(charlist()) :: {charlist(), charlist()}
   defp find_errors(input) when is_list(input) do
     reducer = fn
       char, {stack, errors} when is_opening(char)      -> {[char | stack], errors}
@@ -31,15 +43,26 @@ defmodule AdventOfCode.Day10 do
         end
     end
 
-    {_, errors} = Enum.reduce(input, {[], []}, reducer)
-
-    errors
+    Enum.reduce(input, {[], []}, reducer)
   end
 
-  @spec score_first_error(charlist()) :: integer()
-  defp score_first_error([]), do: 0
-  defp score_first_error([?) | _]), do: 3
-  defp score_first_error([?] | _]), do: 57
-  defp score_first_error([?} | _]), do: 1197
-  defp score_first_error([?> | _]), do: 25137
+  @spec score_first_error({charlist(), charlist()}) :: integer()
+  defp score_first_error({_, []}), do: 0
+  defp score_first_error({_, [?) | _]}), do: 3
+  defp score_first_error({_, [?] | _]}), do: 57
+  defp score_first_error({_, [?} | _]}), do: 1197
+  defp score_first_error({_, [?> | _]}), do: 25137
+
+  @spec score_completion({charlist(), charlist()}) :: integer()
+  def score_completion({stack, []}) do
+    stack
+    |> Enum.reduce(0, fn
+      ?(, total -> total * 5 + 1
+      ?[, total -> total * 5 + 2
+      ?{, total -> total * 5 + 3
+      ?<, total -> total * 5 + 4
+    end)
+  end
+
+  def score_completion(_), do: 0
 end

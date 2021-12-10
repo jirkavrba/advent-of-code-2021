@@ -27,15 +27,25 @@ defmodule AdventOfCode.Day10Test do
   end
 
   test "task 2 example" do
-    # input = """
-    # """
-    # |> String.split("\n", trim: true)
+    input = """
+    [({(<(())[]>[[{[]{<()<>>
+    [(()[<>])]({[<{<<[]>>(
+    {([(<{}[<>[]}>{[]{[(<()>
+    (((({<>}<{<{<>}{[]{[]{}
+    [[<[([]))<([[{}[[()]]]
+    [{[{({}]{}}([{[{{{}}([]
+    {<[[]]>}<{[{[{[]{()[[[]
+    [<(<(<(<{}))><([]([]()
+    <{([([[(<>()){}]>(<<{{
+    <{([{{}}[<[[[<>{}]]]>[]]
+    """
+    |> String.split("\n", trim: true)
 
-    # assert Day10.__task2__(input) == 0
+    assert Day10.compute_completion_score(input) == 288957
   end
 
   test "task 2 input" do
-    # input = Input.read_lines_from_file("priv/inputs/day10.txt")
-    # assert Day10.__task2__(input) == 0
+    input = Input.read_lines_from_file("priv/inputs/day10.txt")
+    assert Day10.compute_completion_score(input) == 3999363569
   end
 end
